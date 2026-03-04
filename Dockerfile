@@ -1,6 +1,6 @@
 FROM node:24.5.0-slim AS builder
 
-RUN apt-get update && apt-get install -y python3 python3-pip sqlite3 && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y python3 python3-pip sqlite3 && apt upgrade -y && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /home/perplexica
 
@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
     uwsgi uwsgi-plugin-python3 \
     git build-essential libxslt-dev zlib1g-dev libffi-dev libssl-dev \
     curl sudo \
+    && apt upgrade -y \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /home/perplexica
@@ -54,7 +55,7 @@ RUN git clone "https://github.com/searxng/searxng" \
                    "/usr/local/searxng/searxng-src"
 
 RUN python3 -m venv "/usr/local/searxng/searx-pyenv"
-RUN "/usr/local/searxng/searx-pyenv/bin/pip" install --upgrade pip setuptools wheel pyyaml msgspec
+RUN "/usr/local/searxng/searx-pyenv/bin/pip" install --upgrade pip typing-extensions setuptools wheel pyyaml msgspec
 RUN cd "/usr/local/searxng/searxng-src" && \
     "/usr/local/searxng/searx-pyenv/bin/pip" install --use-pep517 --no-build-isolation -e .
 
